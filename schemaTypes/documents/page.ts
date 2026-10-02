@@ -20,11 +20,12 @@ export const page = defineType({
       name: 'template',
       title: 'Extras on this page',
       type: 'string',
-      description: 'Adds a working form under the text.',
+      description: 'Adds a working form beside the text. On the contact page, each line of the text becomes a row with an icon (name, address, email).',
       options: {
         list: [
           {title: 'Text only', value: 'default'},
-          {title: 'Contact form', value: 'contact'},
+          {title: 'Contact form (Contacts)', value: 'contact'},
+          {title: 'Contribution form (Contribute)', value: 'contribute'},
           {title: 'Newsletter sign-up', value: 'newsletter'},
         ],
         layout: 'radio',

@@ -61,17 +61,26 @@ export const contactMessage = defineType({
   readOnly: false,
   fields: [
     defineField({name: 'handled', title: 'Answered', type: 'boolean', initialValue: false}),
+    defineField({
+      name: 'form',
+      title: 'Form',
+      type: 'string',
+      readOnly: true,
+      options: {list: [{title: 'Contacts', value: 'contact'}, {title: 'Contribute', value: 'contribute'}]},
+    }),
     defineField({name: 'name', title: 'Name', type: 'string', readOnly: true}),
     defineField({name: 'email', title: 'Email', type: 'string', readOnly: true}),
     defineField({name: 'subject', title: 'Subject', type: 'string', readOnly: true}),
     defineField({name: 'message', title: 'Message', type: 'text', rows: 8, readOnly: true}),
+    defineField({name: 'linkedin', title: 'LinkedIn profile', type: 'url', readOnly: true}),
+    defineField({name: 'topic', title: 'Proposed title or topic', type: 'text', rows: 4, readOnly: true}),
     defineField({name: 'createdAt', title: 'Sent', type: 'datetime', readOnly: true}),
   ],
   orderings: [{title: 'Newest first', name: 'createdDesc', by: [{field: 'createdAt', direction: 'desc'}]}],
   preview: {
-    select: {name: 'name', subject: 'subject', handled: 'handled', createdAt: 'createdAt'},
-    prepare: ({name, subject, handled, createdAt}) => ({
-      title: `${handled ? '✓ ' : ''}${subject || '(no subject)'}`,
+    select: {name: 'name', subject: 'subject', topic: 'topic', handled: 'handled', createdAt: 'createdAt'},
+    prepare: ({name, subject, topic, handled, createdAt}) => ({
+      title: `${handled ? '✓ ' : ''}${topic || subject || '(no subject)'}`,
       subtitle: [name, createdAt ? new Date(createdAt).toLocaleString('en-GB') : ''].filter(Boolean).join(' · '),
     }),
   },

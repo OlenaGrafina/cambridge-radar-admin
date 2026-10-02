@@ -21,11 +21,11 @@ export const homePage = defineType({
     }),
     defineField({
       name: 'editorsPicks',
-      title: 'Editor’s picks',
+      title: 'Daily Feed',
       type: 'array',
-      description: 'Shown in the side column. Empty = hidden.',
+      description: 'Articles in the “Daily Feed” slider (4 per slide), in this order. Empty = the newest articles.',
       of: [defineArrayMember({type: 'reference', to: [{type: 'post'}]})],
-      validation: (rule) => rule.max(6).unique(),
+      validation: (rule) => rule.max(16).unique(),
     }),
     defineField({
       name: 'sections',
