@@ -26,7 +26,6 @@ Copy `.env.example` to `.env.local`. The write token is only needed by the impor
 | Sections | `category` | Business, Technology, AI, Leadership, Economy, Geopolitics, Analysis. `order` = menu order. |
 | Series | `series` | Optional multi-part stories at `/series/<url>`. |
 | Pages | `page` | About, Contribute, Newsletter, Contacts, Privacy policy. “Extras” adds a contact or sign-up form. |
-| Comments | `comment` | Readers’ comments arrive as *Waiting for review*. **Approve** / **Reject** / **Mark as spam** publish in one click. |
 | Messages | `contactMessage` | Contact form submissions (also emailed when Resend is configured). |
 | Subscribers | `subscriber` | Newsletter list. Double opt-in when email is configured. |
 | Home page | singleton | Top stories (slider), editor’s picks, section rows. Everything falls back to “newest”. |
@@ -52,5 +51,4 @@ In sanity.io/manage → API → Webhooks create one webhook:
 - URL `https://cambridge-radar.com/api/revalidate`, all documents, create/update/delete
 - Projection `{_id, _type}`, secret = `SANITY_REVALIDATE_SECRET` of the frontend
 
-It refreshes the site on every publish, sends the newsletter for a newly published article and
-emails readers about approved replies.
+It refreshes the site on every publish and sends the newsletter for a newly published article.

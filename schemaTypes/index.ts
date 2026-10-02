@@ -1,5 +1,5 @@
 import {author} from './documents/author'
-import {comment, contactMessage, subscriber} from './documents/inbox'
+import {contactMessage, subscriber} from './documents/inbox'
 import {page} from './documents/page'
 import {post} from './documents/post'
 import {redirect} from './documents/redirect'
@@ -21,7 +21,6 @@ export const schemaTypes = [
   series,
   page,
   // inbox
-  comment,
   subscriber,
   contactMessage,
   // site

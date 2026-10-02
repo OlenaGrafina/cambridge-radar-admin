@@ -53,7 +53,7 @@ export const siteSettings = defineType({
       title: 'Editorial email',
       type: 'string',
       group: 'brand',
-      description: 'Contact form messages and new comments are sent here.',
+      description: 'Contact form messages are sent here.',
       validation: (rule) => rule.email(),
     }),
     defineField({
@@ -108,7 +108,7 @@ export const siteSettings = defineType({
       title: 'Sign-up heading',
       type: 'string',
       group: 'newsletter',
-      initialValue: 'Get the Radar in your inbox',
+      initialValue: 'Discover more from Cambridge Radar - Signals of What’s Next',
     }),
     defineField({
       name: 'newsletterText',
@@ -116,7 +116,7 @@ export const siteSettings = defineType({
       type: 'text',
       rows: 2,
       group: 'newsletter',
-      initialValue: 'New analysis from Cambridge Radar, straight to your email. No noise.',
+      initialValue: 'Subscribe to get the latest posts sent to your email.',
     }),
     defineField({
       name: 'newsletterAutoSend',

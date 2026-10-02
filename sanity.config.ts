@@ -2,7 +2,6 @@ import {visionTool} from '@sanity/vision'
 import {defineConfig} from 'sanity'
 import {structureTool} from 'sanity/structure'
 
-import {approveComment, rejectComment, spamComment} from './actions/commentActions'
 import {SINGLETONS, schemaTypes} from './schemaTypes'
 import {structure} from './structure'
 
@@ -31,9 +30,6 @@ export default defineConfig({
     actions: (input, context) => {
       if (singletonTypes.has(context.schemaType)) {
         return input.filter(({action}) => action && singletonActions.has(action))
-      }
-      if (context.schemaType === 'comment') {
-        return [approveComment, rejectComment, spamComment, ...input]
       }
       return input
     },

@@ -106,13 +106,6 @@ export const post = defineType({
       options: {layout: 'tags'},
       description: 'Used for related articles and search. Not shown as separate pages.',
     }),
-    defineField({
-      name: 'allowComments',
-      title: 'Allow comments',
-      type: 'boolean',
-      group: 'meta',
-      initialValue: true,
-    }),
     defineField({name: 'seo', title: 'SEO', type: 'seo', group: 'seo'}),
     defineField({
       name: 'newsletterSentAt',

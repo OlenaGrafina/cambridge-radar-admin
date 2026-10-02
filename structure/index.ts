@@ -1,5 +1,4 @@
 import {CogIcon} from '@sanity/icons/Cog'
-import {CommentIcon} from '@sanity/icons/Comment'
 import {DocumentTextIcon} from '@sanity/icons/DocumentText'
 import {EnvelopeIcon} from '@sanity/icons/Envelope'
 import {HomeIcon} from '@sanity/icons/Home'
@@ -12,13 +11,6 @@ const singleton = (S: Parameters<StructureResolver>[0], type: string, title: str
     .id(type)
     .icon(icon)
     .child(S.document().schemaType(type).documentId(type).title(title))
-
-const comments = (S: Parameters<StructureResolver>[0], title: string, filter: string) =>
-  S.documentList()
-    .title(title)
-    .schemaType('comment')
-    .filter(`_type == "comment" && ${filter}`)
-    .defaultOrdering([{field: 'createdAt', direction: 'desc'}])
 
 export const structure: StructureResolver = (S) =>
   S.list()
@@ -77,27 +69,6 @@ export const structure: StructureResolver = (S) =>
       S.documentTypeListItem('series').title('Series'),
       S.documentTypeListItem('page').title('Pages'),
       S.divider(),
-      S.listItem()
-        .title('Comments')
-        .icon(CommentIcon)
-        .child(
-          S.list()
-            .title('Comments')
-            .items([
-              S.listItem()
-                .title('Waiting for review')
-                .icon(CommentIcon)
-                .child(comments(S, 'Waiting for review', 'status == "pending"')),
-              S.listItem()
-                .title('Published')
-                .child(comments(S, 'Published', 'status == "approved"')),
-              S.listItem()
-                .title('Rejected & spam')
-                .child(comments(S, 'Rejected & spam', 'status in ["rejected", "spam"]')),
-              S.divider(),
-              S.listItem().title('All comments').child(comments(S, 'All comments', 'true')),
-            ]),
-        ),
       S.listItem()
         .title('Messages')
         .icon(EnvelopeIcon)
