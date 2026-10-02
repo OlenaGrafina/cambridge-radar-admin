@@ -141,6 +141,14 @@ export const siteSettings = defineType({
       description: 'Loads only after the reader accepts cookies.',
     }),
     defineField({
+      name: 'gtmId',
+      title: 'Google Tag Manager container ID',
+      type: 'string',
+      group: 'tracking',
+      description: 'Optional, starts with GTM-. For marketing tags (LinkedIn, Meta) added without a deploy. Loads only after consent.',
+      validation: (rule) => rule.regex(/^GTM-[A-Z0-9]+$/, {name: 'GTM ID'}),
+    }),
+    defineField({
       name: 'googleVerification',
       title: 'Google Search Console verification code',
       type: 'string',
