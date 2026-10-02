@@ -6,5 +6,5 @@ export default defineCliConfig({
     dataset: process.env.SANITY_STUDIO_DATASET || 'production',
   },
   studioHost: 'cambridge-radar',
-  deployment: {autoUpdates: true},
+  deployment: {appId: 'tkvjb28b45dtwtgwlhzv1gm6', autoUpdates: true},
 })
