@@ -1,0 +1,18 @@
+# deps
+node_modules/
+
+# build
+dist/
+.sanity/
+
+# env — this repo is public, never commit secrets
+.env
+.env.*
+!.env.example
+
+# import cache (WordPress dump, downloaded media)
+scripts/.cache/
+
+# logs
+*.log
+.DS_Store

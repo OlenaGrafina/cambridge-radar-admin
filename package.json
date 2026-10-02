@@ -1,0 +1,33 @@
+{
+  "name": "cambridge-radar-admin",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Cambridge Radar — Sanity Studio",
+  "type": "module",
+  "scripts": {
+    "dev": "sanity dev",
+    "build": "sanity build",
+    "start": "sanity start",
+    "deploy": "sanity deploy",
+    "typecheck": "tsc --noEmit",
+    "import:wp": "node scripts/import-wp.mjs"
+  },
+  "engines": {
+    "node": ">=22.12"
+  },
+  "dependencies": {
+    "@sanity/vision": "^6.17.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "sanity": "^6.17.0",
+    "styled-components": "^6.1.19"
+  },
+  "devDependencies": {
+    "@portabletext/block-tools": "^6.0.3",
+    "@sanity/client": "^8.9.0",
+    "@types/react": "^19.2.2",
+    "dotenv": "^17.2.3",
+    "jsdom": "^27.0.1",
+    "typescript": "^5.9.3"
+  }
+}
