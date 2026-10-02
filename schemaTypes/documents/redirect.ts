@@ -1,4 +1,4 @@
-import {TransferIcon} from '@sanity/icons'
+import {TransferIcon} from '@sanity/icons/Transfer'
 import {defineField, defineType} from 'sanity'
 
 const isPath = (value?: string) =>

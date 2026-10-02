@@ -1,4 +1,6 @@
-import {CommentIcon, EnvelopeIcon, UsersIcon} from '@sanity/icons'
+import {CommentIcon} from '@sanity/icons/Comment'
+import {EnvelopeIcon} from '@sanity/icons/Envelope'
+import {UsersIcon} from '@sanity/icons/Users'
 import {defineField, defineType} from 'sanity'
 
 export const COMMENT_STATUSES = [

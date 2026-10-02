@@ -100,19 +100,14 @@ async function loadSchema() {
     fs
       .readdirSync(d, {withFileTypes: true})
       .flatMap((e) => (e.isDirectory() ? walk(path.join(d, e.name)) : [path.join(d, e.name)]))
-  const icons = new Set()
-  for (const f of walk(schemaDir).filter((f) => f.endsWith('.ts'))) {
-    for (const m of fs.readFileSync(f, 'utf8').matchAll(/import\s*\{([^}]*)\}\s*from\s*'@sanity\/icons'/g)) {
-      m[1].split(',').map((x) => x.trim()).filter(Boolean).forEach((n) => icons.add(n))
-    }
-  }
   const stubs = {
     sanity: 'const id = (x) => x; export const defineType = id, defineField = id, defineArrayMember = id;',
-    '@sanity/icons': [...icons].map((n) => `export const ${n} = () => null;`).join('\n'),
   }
   registerHooks({
     resolve(specifier, context, nextResolve) {
       if (specifier in stubs) return {url: `stub:${specifier}`, shortCircuit: true}
+      // @sanity/icons v5: one subpath per icon, e.g. '@sanity/icons/Cog' → CogIcon
+      if (specifier.startsWith('@sanity/icons/')) return {url: `stub-icon:${specifier.slice(14)}`, shortCircuit: true}
       if (specifier.startsWith('.') && context.parentURL?.endsWith('.ts') && !/\.[cm]?[jt]sx?$/.test(specifier)) {
         return nextResolve(`${specifier}.ts`, context)
       }
@@ -120,6 +115,10 @@ async function loadSchema() {
     },
     load(url, context, nextLoad) {
       if (url.startsWith('stub:')) return {format: 'module', source: stubs[url.slice(5)], shortCircuit: true}
+      if (url.startsWith('stub-icon:')) {
+        const name = `${url.slice(10)}Icon`
+        return {format: 'module', source: `export const ${name} = () => null; export default ${name};`, shortCircuit: true}
+      }
       return nextLoad(url, context)
     },
   })

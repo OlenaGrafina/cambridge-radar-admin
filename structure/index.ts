@@ -1,11 +1,9 @@
-import {
-  CogIcon,
-  CommentIcon,
-  DocumentTextIcon,
-  EnvelopeIcon,
-  HomeIcon,
-  TransferIcon,
-} from '@sanity/icons'
+import {CogIcon} from '@sanity/icons/Cog'
+import {CommentIcon} from '@sanity/icons/Comment'
+import {DocumentTextIcon} from '@sanity/icons/DocumentText'
+import {EnvelopeIcon} from '@sanity/icons/Envelope'
+import {HomeIcon} from '@sanity/icons/Home'
+import {TransferIcon} from '@sanity/icons/Transfer'
 import type {StructureResolver} from 'sanity/structure'
 
 const singleton = (S: Parameters<StructureResolver>[0], type: string, title: string, icon: typeof HomeIcon) =>

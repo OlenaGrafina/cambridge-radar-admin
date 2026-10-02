@@ -1,4 +1,5 @@
-import {StackCompactIcon, TagIcon} from '@sanity/icons'
+import {StackCompactIcon} from '@sanity/icons/StackCompact'
+import {TagIcon} from '@sanity/icons/Tag'
 import {defineField, defineType} from 'sanity'
 
 export const category = defineType({

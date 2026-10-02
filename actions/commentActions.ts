@@ -1,4 +1,6 @@
-import {CheckmarkIcon, CloseIcon, WarningOutlineIcon} from '@sanity/icons'
+import {CheckmarkIcon} from '@sanity/icons/Checkmark'
+import {CloseIcon} from '@sanity/icons/Close'
+import {WarningOutlineIcon} from '@sanity/icons/WarningOutline'
 import {useState} from 'react'
 import {type DocumentActionComponent, type DocumentActionProps, useDocumentOperation} from 'sanity'
 

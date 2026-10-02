@@ -1,4 +1,7 @@
-import {BlockquoteIcon, LinkIcon, PlayIcon, RemoveIcon} from '@sanity/icons'
+import {BlockquoteIcon} from '@sanity/icons/Blockquote'
+import {LinkIcon} from '@sanity/icons/Link'
+import {PlayIcon} from '@sanity/icons/Play'
+import {RemoveIcon} from '@sanity/icons/Remove'
 import {defineField, defineType} from 'sanity'
 
 export const pullQuote = defineType({
