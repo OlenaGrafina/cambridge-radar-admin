@@ -7,6 +7,7 @@ import {SINGLETONS, schemaTypes} from './schemaTypes'
 import {structure} from './structure'
 import {ADVANCED} from './studio/advanced'
 import {Layout, ToolMenu} from './studio/components'
+import {ukMissingStrings} from './studio/i18n'
 
 const singletonTypes = new Set<string>(SINGLETONS)
 const singletonActions = new Set(['publish', 'discardChanges', 'restore'])
@@ -31,6 +32,8 @@ export default defineConfig({
   // Ukrainian interface; English comes back in advanced mode.
   i18n: {
     locales: (prev) => (ADVANCED ? prev : prev.filter((locale) => locale.id === 'uk-UA')),
+    // Strings the Ukrainian package lacks for this Sanity version (otherwise raw keys show).
+    bundles: ukMissingStrings,
   },
 
   // Paid / extra Sanity features stay out of the editor's way until advanced mode is on.
