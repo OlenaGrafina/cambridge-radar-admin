@@ -8,29 +8,28 @@ export const seo = defineType({
   fields: [
     defineField({
       name: 'title',
-      title: 'Meta title',
+      title: 'Meta-заголовок',
       type: 'string',
-      description: 'Leave empty to use the headline. Aim for under 60 characters.',
-      validation: (rule) => rule.max(70).warning('Google usually cuts titles after ~60 characters.'),
+      description: 'Порожньо — береться звичайний заголовок. Бажано до 60 символів.',
+      validation: (rule) => rule.max(70).warning('Google зазвичай обрізає заголовок після ~60 символів.'),
     }),
     defineField({
       name: 'description',
-      title: 'Meta description',
+      title: 'Meta-опис',
       type: 'text',
       rows: 3,
-      description: 'Leave empty to use the standfirst. Aim for 120–160 characters.',
-      validation: (rule) =>
-        rule.max(180).warning('Google usually cuts descriptions after ~160 characters.'),
+      description: 'Порожньо — береться лід. Бажано 120–160 символів.',
+      validation: (rule) => rule.max(180).warning('Google зазвичай обрізає опис після ~160 символів.'),
     }),
     defineField({
       name: 'image',
-      title: 'Social share image',
+      title: 'Зображення для соцмереж',
       type: 'image',
-      description: 'Leave empty to generate one automatically from the headline.',
+      description: 'Порожньо — створюється автоматично із заголовка.',
     }),
     defineField({
       name: 'noIndex',
-      title: 'Hide from search engines',
+      title: 'Сховати від пошукових систем',
       type: 'boolean',
       initialValue: false,
     }),

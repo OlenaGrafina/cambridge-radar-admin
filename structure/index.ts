@@ -5,6 +5,8 @@ import {HomeIcon} from '@sanity/icons/Home'
 import {TransferIcon} from '@sanity/icons/Transfer'
 import type {StructureResolver} from 'sanity/structure'
 
+import {ADVANCED} from '../studio/advanced'
+
 const singleton = (S: Parameters<StructureResolver>[0], type: string, title: string, icon: typeof HomeIcon) =>
   S.listItem()
     .title(title)
@@ -17,45 +19,43 @@ export const structure: StructureResolver = (S) =>
     .title('Cambridge Radar')
     .items([
       S.listItem()
-        .title('Articles')
+        .title('Статті')
         .icon(DocumentTextIcon)
         .child(
           S.list()
-            .title('Articles')
+            .title('Статті')
             .items([
               S.listItem()
-                .title('All articles')
+                .title('Усі статті')
                 .icon(DocumentTextIcon)
                 .child(
                   S.documentTypeList('post')
-                    .title('All articles')
+                    .title('Усі статті')
                     .defaultOrdering([{field: 'publishedAt', direction: 'desc'}]),
                 ),
               S.listItem()
-                .title('By section')
+                .title('За розділами')
                 .child(
                   S.documentTypeList('category')
-                    .title('Sections')
+                    .title('Розділи')
                     .defaultOrdering([{field: 'order', direction: 'asc'}])
                     .child((categoryId) =>
                       S.documentList()
-                        .title('Articles')
+                        .title('Статті розділу')
                         .schemaType('post')
-                        .filter(
-                          '_type == "post" && (category._ref == $id || $id in otherCategories[]._ref)',
-                        )
+                        .filter('_type == "post" && (category._ref == $id || $id in otherCategories[]._ref)')
                         .params({id: categoryId})
                         .defaultOrdering([{field: 'publishedAt', direction: 'desc'}]),
                     ),
                 ),
               S.listItem()
-                .title('By author')
+                .title('За авторами')
                 .child(
                   S.documentTypeList('author')
-                    .title('Authors')
+                    .title('Автори')
                     .child((authorId) =>
                       S.documentList()
-                        .title('Articles')
+                        .title('Статті автора')
                         .schemaType('post')
                         .filter('_type == "post" && author._ref == $id')
                         .params({id: authorId})
@@ -64,22 +64,23 @@ export const structure: StructureResolver = (S) =>
                 ),
             ]),
         ),
-      S.documentTypeListItem('author').title('Authors'),
-      S.documentTypeListItem('category').title('Sections'),
-      S.documentTypeListItem('series').title('Series'),
-      S.documentTypeListItem('page').title('Pages'),
+      S.documentTypeListItem('author').title('Автори'),
+      S.documentTypeListItem('category').title('Розділи'),
+      // Series are not used on this site: shown only in advanced mode.
+      ...(ADVANCED ? [S.documentTypeListItem('series').title('Серії')] : []),
+      S.documentTypeListItem('page').title('Сторінки'),
       S.divider(),
       S.listItem()
-        .title('Messages')
+        .title('Повідомлення')
         .icon(EnvelopeIcon)
         .child(
           S.documentTypeList('contactMessage')
-            .title('Messages')
+            .title('Повідомлення')
             .defaultOrdering([{field: 'createdAt', direction: 'desc'}]),
         ),
-      S.documentTypeListItem('subscriber').title('Subscribers'),
+      S.documentTypeListItem('subscriber').title('Підписники'),
       S.divider(),
-      singleton(S, 'homePage', 'Home page', HomeIcon),
-      singleton(S, 'siteSettings', 'Site settings', CogIcon),
-      S.documentTypeListItem('redirect').title('Redirects').icon(TransferIcon),
+      singleton(S, 'homePage', 'Головна сторінка', HomeIcon),
+      singleton(S, 'siteSettings', 'Налаштування сайту', CogIcon),
+      S.documentTypeListItem('redirect').title('Переадресації').icon(TransferIcon),
     ])

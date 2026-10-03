@@ -2,32 +2,34 @@ import {TransferIcon} from '@sanity/icons/Transfer'
 import {defineField, defineType} from 'sanity'
 
 const isPath = (value?: string) =>
-  !value || value.startsWith('/') || value.startsWith('http') ? true : 'Start with / or http'
+  !value || value.startsWith('/') || value.startsWith('http') ? true : 'Має починатися з / або http'
 
 export const redirect = defineType({
   name: 'redirect',
-  title: 'Redirect',
+  title: 'Переадресація',
   type: 'document',
   icon: TransferIcon,
+  description: 'Нове правило починає працювати з наступною публікацією на сайті (до кількох хвилин).',
   fields: [
     defineField({
       name: 'source',
-      title: 'From',
+      title: 'Звідки',
       type: 'string',
-      description: 'Old path, for example /2026/01/27/davos2026-signals/',
+      description: 'Старий шлях, наприклад /2026/01/27/davos2026-signals/',
       validation: (rule) => rule.required().custom(isPath),
     }),
     defineField({
       name: 'destination',
-      title: 'To',
+      title: 'Куди',
       type: 'string',
-      description: 'New path, for example /geopolitics/davos-2026-signals',
+      description: 'Новий шлях, наприклад /geopolitics/davos-2026-signals',
       validation: (rule) => rule.required().custom(isPath),
     }),
     defineField({
       name: 'permanent',
-      title: 'Permanent (301)',
+      title: 'Постійна (301)',
       type: 'boolean',
+      description: 'Залиште увімкненим: так Google переносить позиції сторінки на нову адресу.',
       initialValue: true,
     }),
   ],

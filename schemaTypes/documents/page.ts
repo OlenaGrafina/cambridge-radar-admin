@@ -4,29 +4,30 @@ import {defineField, defineType} from 'sanity'
 /** Static pages: About, Contribute, Newsletter, Contacts, Privacy policy. */
 export const page = defineType({
   name: 'page',
-  title: 'Page',
+  title: 'Сторінка',
   type: 'document',
   icon: DocumentIcon,
   fields: [
-    defineField({name: 'title', title: 'Title', type: 'string', validation: (rule) => rule.required()}),
+    defineField({name: 'title', title: 'Назва', type: 'string', validation: (rule) => rule.required()}),
     defineField({
       name: 'slug',
-      title: 'URL',
+      title: 'Адреса (URL)',
       type: 'slug',
       options: {source: 'title', maxLength: 64},
       validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'template',
-      title: 'Extras on this page',
+      title: 'Що ще є на сторінці',
       type: 'string',
-      description: 'Adds a working form beside the text. On the contact page, each line of the text becomes a row with an icon (name, address, email).',
+      description:
+        'Робоча форма поруч із текстом. На сторінці контактів кожен рядок тексту стає рядком з іконкою (назва, адреса, email).',
       options: {
         list: [
-          {title: 'Text only', value: 'default'},
-          {title: 'Contact form (Contacts)', value: 'contact'},
-          {title: 'Contribution form (Contribute)', value: 'contribute'},
-          {title: 'Newsletter sign-up', value: 'newsletter'},
+          {title: 'Лише текст', value: 'default'},
+          {title: 'Форма зворотного звʼязку (Contacts)', value: 'contact'},
+          {title: 'Форма для авторів (Contribute)', value: 'contribute'},
+          {title: 'Підписка на розсилку (Newsletter)', value: 'newsletter'},
         ],
         layout: 'radio',
       },
@@ -34,19 +35,20 @@ export const page = defineType({
     }),
     defineField({
       name: 'lede',
-      title: 'Intro',
+      title: 'Вступ',
       type: 'text',
       rows: 3,
-      description: 'Larger text under the title.',
+      description: 'Більший текст під заголовком.',
     }),
-    defineField({name: 'image', title: 'Image', type: 'figure'}),
-    defineField({name: 'body', title: 'Text', type: 'blockContent'}),
+    defineField({name: 'image', title: 'Зображення', type: 'figure'}),
+    defineField({name: 'body', title: 'Текст', type: 'blockContent'}),
     defineField({name: 'seo', title: 'SEO', type: 'seo'}),
     defineField({
       name: 'legacyUrl',
-      title: 'Old WordPress address',
+      title: 'Стара адреса WordPress',
       type: 'string',
       readOnly: true,
+      hidden: true,
     }),
   ],
   preview: {

@@ -6,61 +6,61 @@ import {defineField, defineType} from 'sanity'
 
 export const pullQuote = defineType({
   name: 'pullQuote',
-  title: 'Pull quote',
+  title: 'Виносна цитата',
   type: 'object',
   icon: BlockquoteIcon,
   fields: [
     defineField({
       name: 'text',
-      title: 'Quote',
+      title: 'Цитата',
       type: 'text',
       rows: 3,
       validation: (rule) => rule.required(),
     }),
-    defineField({name: 'attribution', title: 'Attribution', type: 'string'}),
+    defineField({name: 'attribution', title: 'Чиї слова', type: 'string'}),
   ],
   preview: {select: {title: 'text', subtitle: 'attribution'}},
 })
 
 export const embed = defineType({
   name: 'embed',
-  title: 'Video',
+  title: 'Відео',
   type: 'object',
   icon: PlayIcon,
   fields: [
     defineField({
       name: 'url',
-      title: 'URL',
+      title: 'Посилання',
       type: 'url',
-      description: 'YouTube or Vimeo link.',
+      description: 'Посилання на YouTube або Vimeo.',
       validation: (rule) => rule.required(),
     }),
-    defineField({name: 'caption', title: 'Caption', type: 'string'}),
+    defineField({name: 'caption', title: 'Підпис', type: 'string'}),
   ],
   preview: {select: {title: 'url', subtitle: 'caption'}},
 })
 
 export const divider = defineType({
   name: 'divider',
-  title: 'Section break',
+  title: 'Розділювач',
   type: 'object',
   icon: RemoveIcon,
   fields: [
     defineField({
       name: 'style',
-      title: 'Style',
+      title: 'Вигляд',
       type: 'string',
       options: {
         list: [
-          {title: 'Line', value: 'line'},
-          {title: 'Three dots', value: 'dots'},
+          {title: 'Лінія', value: 'line'},
+          {title: 'Три крапки', value: 'dots'},
         ],
         layout: 'radio',
       },
       initialValue: 'line',
     }),
   ],
-  preview: {prepare: () => ({title: 'Section break'})},
+  preview: {prepare: () => ({title: 'Розділювач'})},
 })
 
 export const SOCIAL_NETWORKS = [
@@ -70,23 +70,29 @@ export const SOCIAL_NETWORKS = [
   {title: 'X (Twitter)', value: 'x'},
   {title: 'Telegram', value: 'telegram'},
   {title: 'YouTube', value: 'youtube'},
-  {title: 'Website', value: 'website'},
+  {title: 'Вебсайт', value: 'website'},
 ]
 
 export const socialLink = defineType({
   name: 'socialLink',
-  title: 'Social link',
+  title: 'Соцмережа',
   type: 'object',
   icon: LinkIcon,
   fields: [
     defineField({
       name: 'network',
-      title: 'Network',
+      title: 'Мережа',
       type: 'string',
       options: {list: SOCIAL_NETWORKS},
       validation: (rule) => rule.required(),
     }),
-    defineField({name: 'url', title: 'URL', type: 'url', validation: (rule) => rule.required()}),
+    defineField({name: 'url', title: 'Посилання', type: 'url', validation: (rule) => rule.required()}),
   ],
-  preview: {select: {title: 'network', subtitle: 'url'}},
+  preview: {
+    select: {network: 'network', url: 'url'},
+    prepare: ({network, url}) => ({
+      title: SOCIAL_NETWORKS.find((n) => n.value === network)?.title ?? network,
+      subtitle: url,
+    }),
+  },
 })

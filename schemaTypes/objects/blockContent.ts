@@ -2,46 +2,47 @@ import {defineArrayMember, defineType} from 'sanity'
 
 const link = defineArrayMember({
   name: 'link',
-  title: 'Link',
+  title: 'Посилання',
   type: 'object',
   fields: [
     {
       name: 'href',
-      title: 'URL',
+      title: 'Адреса',
       type: 'url',
+      description: 'Повна адреса (https://…) або шлях на цьому сайті (/authors).',
       validation: (rule) =>
         rule.uri({allowRelative: true, scheme: ['http', 'https', 'mailto', 'tel']}),
     },
-    {name: 'blank', title: 'Open in new tab', type: 'boolean', initialValue: false},
+    {name: 'blank', title: 'Відкривати в новій вкладці', type: 'boolean', initialValue: false},
   ],
 })
 
 /** Article body: headings, quotes, lists, images, pull quotes, video. */
 export const blockContent = defineType({
   name: 'blockContent',
-  title: 'Body',
+  title: 'Текст',
   type: 'array',
   of: [
     defineArrayMember({
       type: 'block',
       styles: [
-        {title: 'Paragraph', value: 'normal'},
-        {title: 'Heading', value: 'h2'},
-        {title: 'Subheading', value: 'h3'},
-        {title: 'Small heading', value: 'h4'},
-        {title: 'Quote', value: 'blockquote'},
+        {title: 'Абзац', value: 'normal'},
+        {title: 'Заголовок', value: 'h2'},
+        {title: 'Підзаголовок', value: 'h3'},
+        {title: 'Малий заголовок', value: 'h4'},
+        {title: 'Цитата', value: 'blockquote'},
       ],
       lists: [
-        {title: 'Bullets', value: 'bullet'},
-        {title: 'Numbers', value: 'number'},
+        {title: 'Маркований список', value: 'bullet'},
+        {title: 'Нумерований список', value: 'number'},
       ],
       marks: {
         decorators: [
-          {title: 'Bold', value: 'strong'},
-          {title: 'Italic', value: 'em'},
-          {title: 'Underline', value: 'underline'},
-          {title: 'Strike', value: 'strike-through'},
-          {title: 'Superscript', value: 'sup'},
+          {title: 'Жирний', value: 'strong'},
+          {title: 'Курсив', value: 'em'},
+          {title: 'Підкреслений', value: 'underline'},
+          {title: 'Закреслений', value: 'strike-through'},
+          {title: 'Верхній індекс', value: 'sup'},
         ],
         annotations: [link],
       },
@@ -56,23 +57,23 @@ export const blockContent = defineType({
 /** Short rich text for bios and page intros: paragraphs, links, lists. */
 export const simpleBlockContent = defineType({
   name: 'simpleBlockContent',
-  title: 'Text',
+  title: 'Текст',
   type: 'array',
   of: [
     defineArrayMember({
       type: 'block',
       styles: [
-        {title: 'Paragraph', value: 'normal'},
-        {title: 'Heading', value: 'h3'},
+        {title: 'Абзац', value: 'normal'},
+        {title: 'Заголовок', value: 'h3'},
       ],
       lists: [
-        {title: 'Bullets', value: 'bullet'},
-        {title: 'Numbers', value: 'number'},
+        {title: 'Маркований список', value: 'bullet'},
+        {title: 'Нумерований список', value: 'number'},
       ],
       marks: {
         decorators: [
-          {title: 'Bold', value: 'strong'},
-          {title: 'Italic', value: 'em'},
+          {title: 'Жирний', value: 'strong'},
+          {title: 'Курсив', value: 'em'},
         ],
         annotations: [link],
       },

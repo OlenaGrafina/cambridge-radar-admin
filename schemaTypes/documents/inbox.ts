@@ -2,9 +2,11 @@ import {EnvelopeIcon} from '@sanity/icons/Envelope'
 import {UsersIcon} from '@sanity/icons/Users'
 import {defineField, defineType} from 'sanity'
 
+const date = (value?: string) => (value ? new Date(value).toLocaleString('uk-UA') : '')
+
 export const subscriber = defineType({
   name: 'subscriber',
-  title: 'Subscriber',
+  title: 'Підписник',
   type: 'document',
   icon: UsersIcon,
   fields: [
@@ -16,72 +18,85 @@ export const subscriber = defineType({
     }),
     defineField({
       name: 'status',
-      title: 'Status',
+      title: 'Статус',
       type: 'string',
       options: {
         list: [
-          {title: 'Waiting for confirmation', value: 'pending'},
-          {title: 'Subscribed', value: 'active'},
-          {title: 'Unsubscribed', value: 'unsubscribed'},
+          {title: 'Чекає підтвердження', value: 'pending'},
+          {title: 'Підписаний', value: 'active'},
+          {title: 'Відписався', value: 'unsubscribed'},
         ],
         layout: 'radio',
       },
       initialValue: 'pending',
     }),
-    defineField({name: 'name', title: 'Name', type: 'string'}),
+    defineField({name: 'name', title: 'Імʼя', type: 'string'}),
     defineField({
       name: 'source',
-      title: 'Signed up from',
+      title: 'Звідки підписався',
       type: 'string',
       readOnly: true,
-      description: 'Page where the form was used, or “import”.',
+      description: 'Сторінка, де заповнили форму, або «import».',
     }),
-    defineField({name: 'createdAt', title: 'Signed up', type: 'datetime', readOnly: true}),
-    defineField({name: 'confirmedAt', title: 'Confirmed', type: 'datetime', readOnly: true}),
+    defineField({name: 'createdAt', title: 'Дата підписки', type: 'datetime', readOnly: true}),
+    defineField({name: 'confirmedAt', title: 'Підтверджено', type: 'datetime', readOnly: true}),
     defineField({
       name: 'token',
-      title: 'Private token',
+      title: 'Приватний токен',
       type: 'string',
       readOnly: true,
       hidden: true,
-      description: 'Used in confirm and unsubscribe links.',
     }),
   ],
-  orderings: [{title: 'Newest first', name: 'createdDesc', by: [{field: 'createdAt', direction: 'desc'}]}],
+  orderings: [{title: 'Спочатку нові', name: 'createdDesc', by: [{field: 'createdAt', direction: 'desc'}]}],
   preview: {
-    select: {title: 'email', subtitle: 'status'},
+    select: {title: 'email', status: 'status'},
+    prepare: ({title, status}) => ({
+      title,
+      subtitle: {pending: 'Чекає підтвердження', active: 'Підписаний', unsubscribed: 'Відписався'}[status as string] ?? status,
+    }),
   },
 })
 
 export const contactMessage = defineType({
   name: 'contactMessage',
-  title: 'Message',
+  title: 'Повідомлення',
   type: 'document',
   icon: EnvelopeIcon,
-  readOnly: false,
   fields: [
-    defineField({name: 'handled', title: 'Answered', type: 'boolean', initialValue: false}),
+    defineField({
+      name: 'handled',
+      title: 'Відповідь надано',
+      type: 'boolean',
+      initialValue: false,
+      description: 'Позначте, коли відповіли — у списку зʼявиться ✓.',
+    }),
     defineField({
       name: 'form',
-      title: 'Form',
+      title: 'Форма',
       type: 'string',
       readOnly: true,
-      options: {list: [{title: 'Contacts', value: 'contact'}, {title: 'Contribute', value: 'contribute'}]},
+      options: {
+        list: [
+          {title: 'Contacts (зворотний звʼязок)', value: 'contact'},
+          {title: 'Contribute (стати автором)', value: 'contribute'},
+        ],
+      },
     }),
-    defineField({name: 'name', title: 'Name', type: 'string', readOnly: true}),
+    defineField({name: 'name', title: 'Імʼя', type: 'string', readOnly: true}),
     defineField({name: 'email', title: 'Email', type: 'string', readOnly: true}),
-    defineField({name: 'subject', title: 'Subject', type: 'string', readOnly: true}),
-    defineField({name: 'message', title: 'Message', type: 'text', rows: 8, readOnly: true}),
-    defineField({name: 'linkedin', title: 'LinkedIn profile', type: 'url', readOnly: true}),
-    defineField({name: 'topic', title: 'Proposed title or topic', type: 'text', rows: 4, readOnly: true}),
-    defineField({name: 'createdAt', title: 'Sent', type: 'datetime', readOnly: true}),
+    defineField({name: 'subject', title: 'Тема', type: 'string', readOnly: true}),
+    defineField({name: 'message', title: 'Повідомлення', type: 'text', rows: 8, readOnly: true}),
+    defineField({name: 'linkedin', title: 'Профіль LinkedIn', type: 'url', readOnly: true}),
+    defineField({name: 'topic', title: 'Запропонована тема', type: 'text', rows: 4, readOnly: true}),
+    defineField({name: 'createdAt', title: 'Надіслано', type: 'datetime', readOnly: true}),
   ],
-  orderings: [{title: 'Newest first', name: 'createdDesc', by: [{field: 'createdAt', direction: 'desc'}]}],
+  orderings: [{title: 'Спочатку нові', name: 'createdDesc', by: [{field: 'createdAt', direction: 'desc'}]}],
   preview: {
-    select: {name: 'name', subject: 'subject', topic: 'topic', handled: 'handled', createdAt: 'createdAt'},
-    prepare: ({name, subject, topic, handled, createdAt}) => ({
-      title: `${handled ? '✓ ' : ''}${topic || subject || '(no subject)'}`,
-      subtitle: [name, createdAt ? new Date(createdAt).toLocaleString('en-GB') : ''].filter(Boolean).join(' · '),
+    select: {name: 'name', topic: 'topic', form: 'form', handled: 'handled', createdAt: 'createdAt'},
+    prepare: ({name, topic, form, handled, createdAt}) => ({
+      title: `${handled ? '✓ ' : ''}${form === 'contribute' ? `Contribute: ${topic || name}` : `Contacts: ${name || 'без імені'}`}`,
+      subtitle: [name, date(createdAt)].filter(Boolean).join(' · '),
     }),
   },
 })

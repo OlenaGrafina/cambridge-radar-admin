@@ -16,6 +16,7 @@
     "node": ">=22.12"
   },
   "dependencies": {
+    "@sanity/locale-uk-ua": "^1.1.37",
     "@sanity/vision": "^6.17.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",

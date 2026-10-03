@@ -4,33 +4,33 @@ import {defineField, defineType} from 'sanity'
 /** Image with the editorial fields a newspaper needs: alt, caption, credit. */
 export const figure = defineType({
   name: 'figure',
-  title: 'Image',
+  title: 'Зображення',
   type: 'image',
   icon: ImageIcon,
   options: {hotspot: true},
   fields: [
     defineField({
       name: 'alt',
-      title: 'Alt text',
+      title: 'Опис для незрячих (alt)',
       type: 'string',
-      description: 'Describe the image for screen readers and Google.',
+      description: 'Що зображено — для екранних читалок і Google. Англійською, як і сайт.',
       validation: (rule) =>
         rule.custom((value, context) => {
           const parent = context.parent as {asset?: unknown} | undefined
-          if (parent?.asset && !value) return 'Alt text is required for accessibility'
+          if (parent?.asset && !value) return 'Додайте опис зображення (alt)'
           return true
         }),
     }),
-    defineField({name: 'caption', title: 'Caption', type: 'string'}),
+    defineField({name: 'caption', title: 'Підпис', type: 'string'}),
     defineField({
       name: 'credit',
-      title: 'Credit',
+      title: 'Автор / джерело фото',
       type: 'string',
-      description: 'For example: Photo: Chatham House',
+      description: 'Наприклад: Photo: Chatham House',
     }),
   ],
   preview: {
     select: {caption: 'caption', alt: 'alt', media: 'asset'},
-    prepare: ({caption, alt, media}) => ({title: caption || alt || 'Image', media}),
+    prepare: ({caption, alt, media}) => ({title: caption || alt || 'Зображення', media}),
   },
 })
