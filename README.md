@@ -1,54 +1,63 @@
-# Cambridge Radar — admin
+# Cambridge Radar — адмінка
 
-Sanity Studio for [cambridge-radar.com](https://cambridge-radar.com). The website lives in
-[cambridge-radar-frontend](https://github.com/cyanidium1/cambridge-radar-frontend).
+Sanity Studio для [cambridge-radar.com](https://cambridge-radar.com). Сайт — репозиторій
+**cambridge-radar-frontend**.
 
-- Sanity project `polcbwiw`, dataset `production` (public read).
-- One administrator account. Authors do not log in: the editor keeps an author card
-  (name, role, portrait, bio, links) and picks it under any article.
+> Документ для розробників. Інструкція для редакції — окремий PDF «Інструкція з користування сайтом».
 
-## Run
+- Sanity: проєкт `polcbwiw`, датасет `production` (публічне читання).
+- Адмінка: https://cambridge-radar.sanity.studio (вхід через Google / GitHub / email акаунт Sanity).
+- Користувачі додаються в sanity.io/manage → проєкт → Members → Invite.
+- Автори статей не мають входу: редакція веде картки авторів і вибирає автора в статті.
+
+## Запуск і деплой
 
 ```bash
-npm install --no-audit --no-fund --maxsockets=3 --fetch-retries=8
-npm run dev            # http://localhost:3344
-npm run deploy         # publishes the Studio to cambridge-radar.sanity.studio
+npm install
+npm run dev       # http://localhost:3333
+npm run deploy    # опублікувати адмінку на cambridge-radar.sanity.studio
 ```
 
-Copy `.env.example` to `.env.local`. The write token is only needed by the import script.
+Перед деплоєм бажано задати адресу сайту для кнопки «Відкрити на сайті»:
+`SANITY_STUDIO_SITE_URL=https://cambridge-radar.com npm run deploy`.
 
-## What is where
+## Мова і «Розширений режим»
 
-| Sidebar | Type | Notes |
+Інтерфейс українською (`@sanity/locale-uk-ua`), усі назви полів і підказки — у схемах.
+Кнопка **«Розширений режим»** вгорі (`studio/advanced.ts`, `studio/components.tsx`) вмикає все, що
+приховано за замовчуванням: релізи, планування, завдання, коментарі, Canvas, Media Library,
+Vision, англійську мову і кнопку тарифів Sanity. Вибір зберігається в браузері.
+
+## Що де
+
+| Меню | Тип | Файл |
 |---|---|---|
-| Articles | `post` | Address is `/<section>/<url>`. Lead image, standfirst, body, author, section (+ “also show in”), series, topics, SEO. |
-| Authors | `author` | Author cards. “Editorial team” puts a person first on /authors. |
-| Sections | `category` | Business, Technology, AI, Leadership, Economy, Geopolitics, Analysis. `order` = menu order. |
-| Series | `series` | Optional multi-part stories at `/series/<url>`. |
-| Pages | `page` | About, Contribute, Newsletter, Contacts, Privacy policy. “Extras” adds a contact or sign-up form. |
-| Messages | `contactMessage` | Contact form submissions (also emailed when Resend is configured). |
-| Subscribers | `subscriber` | Newsletter list. Double opt-in when email is configured. |
-| Home page | singleton | Top stories (slider), editor’s picks, section rows. Everything falls back to “newest”. |
-| Site settings | singleton | Logo, menus, social links, newsletter copy, GA4 / Clarity IDs, Search Console & Bing verification. |
-| Redirects | `redirect` | Old WordPress addresses → new ones (301). Read by the website at build. |
+| Статті | `post` | `schemaTypes/documents/post.ts` |
+| Автори | `author` | `schemaTypes/documents/author.ts` |
+| Розділи | `category` | `schemaTypes/documents/taxonomy.ts` |
+| Сторінки | `page` | `schemaTypes/documents/page.ts` |
+| Повідомлення, Підписники | `contactMessage`, `subscriber` | `schemaTypes/documents/inbox.ts` |
+| Головна сторінка | singleton `homePage` | `schemaTypes/singletons/homePage.ts` |
+| Налаштування сайту | singleton `siteSettings` | `schemaTypes/singletons/siteSettings.ts` |
+| Переадресації | `redirect` | `schemaTypes/documents/redirect.ts` |
+| (у розширеному режимі) Серії | `series` | `schemaTypes/documents/taxonomy.ts` |
 
-## Importing from WordPress
+Бокове меню — `structure/index.ts`. Текст статті, зображення, цитати, відео — `schemaTypes/objects/`.
 
-`scripts/import-wp.mjs` pulls posts, author profiles, sections, pages, images and redirects from the
-public WordPress REST API of the old site. It caches every response in `scripts/.cache/`.
+Коли додаєте поле: схема тут → запит і тип у сайті (`src/lib/sanity/queries.ts`, `types.ts`) → компонент.
+
+## Імпорт із WordPress
+
+`scripts/import-wp.mjs` переніс статті, профілі, розділи, сторінки, зображення й переадресації зі
+старого сайту. Скрипт ідемпотентний (фіксовані id, зображення без дублів):
 
 ```bash
-npm run import:wp            # dry run
-npm run import:wp -- --apply # write to the dataset
+npm run import:wp            # пробний прогін
+npm run import:wp -- --apply # запис у датасет
 ```
 
-It is idempotent: documents have fixed ids and images are de-duplicated, so it can be re-run.
+## Вебхук
 
-## Webhook
-
-In sanity.io/manage → API → Webhooks create one webhook:
-
-- URL `https://cambridge-radar.com/api/revalidate`, all documents, create/update/delete
-- Projection `{_id, _type}`, secret = `SANITY_REVALIDATE_SECRET` of the frontend
-
-It refreshes the site on every publish and sends the newsletter for a newly published article.
+sanity.io/manage → API → Webhooks: URL `https://<домен>/api/revalidate`, усі документи,
+create/update/delete, projection `{_id, _type}`, secret = `SANITY_REVALIDATE_SECRET` сайту.
+Скидає кеш сайту після кожної публікації й запускає розсилку для нової статті.

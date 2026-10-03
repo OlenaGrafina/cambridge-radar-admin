@@ -88,6 +88,16 @@ export const post = defineType({
         }),
     }),
     defineField({
+      name: 'relatedPosts',
+      title: 'Схожі статті (вручну)',
+      type: 'array',
+      of: [defineArrayMember({type: 'reference', to: [{type: 'post'}]})],
+      group: 'meta',
+      description:
+        'До 3 статей у блоці «Related» під текстом, у цьому порядку. Порожньо — підбираються автоматично: той самий розділ або автор.',
+      validation: (rule) => rule.max(3).unique(),
+    }),
+    defineField({
       name: 'series',
       title: 'Серія',
       type: 'reference',
