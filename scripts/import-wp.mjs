@@ -1227,7 +1227,6 @@ async function main() {
       publishedAt: isoZ(p.date_gmt),
       ...(modifiedLater ? {updatedAt: isoZ(p.modified_gmt)} : {}),
       ...(tags.length ? {tags} : {}),
-      allowComments: true,
       ...(seo ? {seo} : {}),
       legacyUrl: m.legacyUrl,
     }
