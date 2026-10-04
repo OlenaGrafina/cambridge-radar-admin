@@ -1125,6 +1125,41 @@ async function main() {
   }
   docs.push(...authorDocs)
 
+  // A byline can be a bare WP login with no profile (post 48: "nbabushkina") while the article
+  // ends with an "About the author" box (photo + "<strong>Name</strong> is …"). That box names the
+  // real author: build an author card from it instead of falling back to the editor.
+  async function authorFromPostBox(p, wpUserSlug) {
+    const body = new JSDOM(`<body>${p.content.rendered}</body>`).window.document.body
+    const head = [...body.querySelectorAll('h2, h3, h4')].find((h) => /^about the author$/i.test(squash(h.textContent)))
+    let box = head?.nextElementSibling
+    while (box && !squash(box.textContent) && !box.querySelector('img')) box = box.nextElementSibling
+    const strong = box?.querySelector('p strong, p b')
+    const name = cleanText(strong?.textContent ?? '')
+    if (!/^[A-Z][\p{L}’'-]+(?: [A-Z][\p{L}’'-]+){1,2}$/u.test(name)) return null
+    const known = profileByName.get(fold(name))
+    const slug = known?.slug ?? slugify(name)
+    if (!known && !authorDocs.some((d) => d._id === `author-${slug}`)) {
+      const bio = await htmlToPortableText(strong.closest('p').outerHTML, simpleBlockContent, {seed: `author-${slug}-bio`, label: `author ${slug}`, fallbackAlt: name})
+      const mediaId = Number(box.querySelector('img')?.className.match(/wp-image-(\d+)/)?.[1])
+      const photo = mediaId ? await buildFigure({media: await getMedia(mediaId), alt: name}) : null
+      const doc = {
+        _id: `author-${slug}`,
+        _type: 'author',
+        name,
+        slug: {_type: 'slug', current: slug},
+        ...(photo ? {photo} : {}),
+        shortBio: leadSentences(ptPlainText(bio), 400, 2),
+        bio,
+        legacySlugs: wpUserSlug ? [`/author/${wpUserSlug}/`] : [],
+      }
+      authorDocs.push(doc)
+      docs.push(doc)
+      report.oddities.push(`author ${slug}: no WP profile – card built from the "About the author" box in post ${p.id}; role left empty`)
+    }
+    if (wpUserSlug) userToProfile.set(wpUserSlug, slug)
+    return slug
+  }
+
   // ---- Posts (pass 1: metadata + redirect map) -------------------------------------------
   log('\n4. Posts')
   const postMeta = []
@@ -1156,10 +1191,15 @@ async function main() {
       const bySlug = profiles.find((pr) => p.slug.endsWith(pr.slug))
       const byTag = profiles.find((pr) => tagNames.includes(fold(pr.name)))
       const inferred = bySlug ?? byTag
+      const boxed = inferred ? null : await authorFromPostBox(p, byUser)
       if (inferred) {
         authorSlug = inferred.slug
         how = `inferred from ${bySlug ? 'post slug' : 'tag'}`
         report.inferred.push(`post ${p.id} "${title}": byline "${info.byline}" (WP user ${byUser}) has no profile → ${inferred.name} (${how})`)
+      } else if (boxed) {
+        authorSlug = boxed
+        how = 'in-body "About the author" box'
+        report.inferred.push(`post ${p.id} "${title}": byline "${info.byline}" (WP user ${byUser}) has no profile → ${boxed} (${how})`)
       } else {
         authorSlug = FALLBACK_AUTHOR
         how = 'FALLBACK'
