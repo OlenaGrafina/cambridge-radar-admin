@@ -14,7 +14,7 @@ const singletonActions = new Set(['publish', 'discardChanges', 'restore'])
 
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID || 'polcbwiw'
 const dataset = process.env.SANITY_STUDIO_DATASET || 'production'
-const siteUrl = process.env.SANITY_STUDIO_SITE_URL || 'https://cambridge-radar-frontend.vercel.app'
+const siteUrl = process.env.SANITY_STUDIO_SITE_URL || 'https://cambridge-radar.com'
 
 export default defineConfig({
   name: 'cambridge-radar',
